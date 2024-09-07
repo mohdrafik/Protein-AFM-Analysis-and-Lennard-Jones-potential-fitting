@@ -15,19 +15,17 @@ namingFinalfile.py
 *.zip
 *.json
 *.json
-myenv
+myenv/
 *.pyc
 Amplitudephase.dat
 finalcombined_data.dat
 finalcombined_datannnnnnnnn.dat
 myevev
-dataproblem
-.ipynb_checkpoints
+.ipynb_checkpoints/
 test_completeCleancode.ipynb
-.ipynb_checkpoints/process_plot_data-checkpoint.ipynb
 .idea
 find_variablePyFiles.py
 shape2identifyEnd.py
-new_data7sep24
+.ipynb_checkpoints/
 
 
