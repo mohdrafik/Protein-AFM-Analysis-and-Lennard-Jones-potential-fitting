@@ -300,9 +300,11 @@ def find1bymcampdfandfit(ampdf,phasedf,backward_MinimaBump_nmValue,forward_Minim
     # same data but another figure 
 
     fig
-    plt.scatter(ampdf_x_nm, ampdf_y_nA, marker ='.',markersize=1, linewidth=0.5, alpha=0.4,label='Data(nA)')
+    # plt.scatter(ampdf_x_nm, ampdf_y_nA, marker ='.',markersize=1, linewidth=0.5, alpha=0.4,label='Data(nA)')
+    plt.scatter(ampdf_x_nm, ampdf_y_nA, marker='.', s=1, linewidth=0.5, alpha=0.4, label='Data(nA)')
 
-    plt.scatter(ampdf_x_nm,ampdf_y_nm, marker ='*',markersize=1, linewidth=0.5, alpha=0.3,label='Data(nm)') # THIS IS FOR CONVERTED Y DATA TO nm --> y=  y*(1/m)
+    # plt.scatter(ampdf_x_nm,ampdf_y_nm, marker ='*',markersize=1, linewidth=0.5, alpha=0.3,label='Data(nm)') # THIS IS FOR CONVERTED Y DATA TO nm --> y=  y*(1/m)
+    plt.scatter(ampdf_x_nm,ampdf_y_nm, marker='*', s=1, linewidth=0.5, alpha=0.3, label='Data(nm)')
 
     plt.plot(ampdf_x_nm, poly(ampdf_x_nm), color='red', label='Linear Fit')
 
@@ -322,7 +324,7 @@ def find1bymcampdfandfit(ampdf,phasedf,backward_MinimaBump_nmValue,forward_Minim
 
     ampdata2saveAsAmplitude_nm = (1/m)* ampdf['Amplitude'][desired_nmBackIndexwrtoInflexion:data_choose_endindex]
 
-    ampdata2saveAsAmplitude_nm.shape
+    print("amp data size:", ampdata2saveAsAmplitude_nm.shape)
     plt.plot(ampdata2saveAspiezo_nm,ampdata2saveAsAmplitude_nm,'-r')
     plt.grid()
     plt.xlabel('piezo(nm)')
@@ -340,7 +342,7 @@ def find1bymcampdfandfit(ampdf,phasedf,backward_MinimaBump_nmValue,forward_Minim
     # last value add ---- > phasedf.iloc[data_endamp-1,1] 
 
     phase  = - phasedf['Phase'] -90 + phasedf.iloc[data_endamp-1,1]
-    print("\n", phase.shape)
+    print("phase shape :\n", phase.shape)
     print("\n new phase values: \n", phase[0:5])
 
     phasedata2savedegree = phase[desired_nmBackIndexwrtoInflexion:data_choose_endindex]
