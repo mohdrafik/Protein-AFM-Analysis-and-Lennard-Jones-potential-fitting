@@ -27,6 +27,6 @@ test_completeCleancode.ipynb
 find_variablePyFiles.py
 shape2identifyEnd.py
 .ipynb_checkpoints/
-new_data7sep24/
-
+data/
+.ipynb_checkpoints/process_plot_data-checkpoint.ipynb
 
