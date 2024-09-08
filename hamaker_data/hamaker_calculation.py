@@ -3,7 +3,8 @@ import numpy as np
 # import matplotlib.pyplot as plt
 import math
 import os
-def hamaker_const(datapath, filename, hamdeg = None ):
+
+def hamaker_const(datapath, filename, start_idx, end_idx, hamdeg = None ):
 
     """
     if hamdeg is None --> then calculate the cos_phi in Radian. otherwise in degree.
@@ -13,15 +14,16 @@ def hamaker_const(datapath, filename, hamdeg = None ):
     Q= 466
     R = 10  #nm
     Piezo Amp near distant in meter
-    i f you are not getting nothing in some column it means it is not infinite or NAn
+    if you are not getting nothing in some column it means it is infinite or NAN
 
     """
     # df_nd = pd.read_excel('408 with neardistance.xlsx')
     # df_nd = pd.read_excel("408 with piezo.xlsx")
     file2read = os.path.join(datapath,filename)
-
+    
     # df_nd = pd.read_excel(file2read)
     df_nd = pd.read_csv(file2read,delimiter=' ')
+    # df_nd = df_nd[start_idx:end_idx]
 
     # for col in df_nd.columns:
     #     print(col)
@@ -38,12 +40,15 @@ def hamaker_const(datapath, filename, hamdeg = None ):
             
 
     # print(df_nd.head() ,"and size:\n ",df_nd.shape,"\n", df_nd.tail(),"\n")   # Piezo Amp near distant in meter
+
     K= 26.90  # N/m
     Q= 466
     # R = 10  # nm 
     R = 10*1e-9  # m now after convert from nm 
     A0 = df_nd['amplitude'].iloc[-1]
     K_constant = -(3*K*A0)/(Q*R)
+
+    df_nd = df_nd[start_idx:end_idx]   # here it is sliced according to strat and end index.
 
     phase_deg = df_nd["phase"]
     df_nd["phase_radian"] = np.deg2rad(df_nd["phase"])
@@ -105,6 +110,7 @@ def hamaker_const(datapath, filename, hamdeg = None ):
     # plt.plot(df_nd['neardistance'], df_nd['amplitude']) 
     # plt.grid(True)
     # # plt.plot(df_nd['neardistance'],df_nd['phase'])
+
 if __name__=="__main__":
     
     filename_list = []
@@ -113,7 +119,7 @@ if __name__=="__main__":
     datapath = "E:\\python_programs\\xlsfileprocess\\hamaker_data\\hamdata\\"
     # datapath = "E:\python_programs\xlsfileprocess\hamaker_data\hamdata"
     for filename in os.listdir(datapath):
-        print("<------------------------------->",filename,)
+        print("<------------------------------->",filename)
         # if filename[-5:] ==".xlsx" and filename[0:7] !='hamaker':
         if filename[-4:] ==".dat" and filename[0:7] !='hamaker':
             print(f"----------->!!!!!!!! current processing file name is {filename}") 
@@ -122,11 +128,12 @@ if __name__=="__main__":
             filename_list.append(result["filename"])
             hamaker_constavglist.append(result["hamaker_const"])
 
-    hamaker_constavgData = {"filename":filename_list,"hammaker_constant":hamaker_constavglist }
+    hamaker_constavgData = {"filename":filename_list,"hammaker_constant":hamaker_constavglist}
 
     hamaker_constavgData_df = pd.DataFrame(hamaker_constavgData)
 
     hamaker_constavgData_df.to_excel(os.path.join(datapath,'hamaker_avgValeachfile.xlsx'))        
+
 
     """
     If hamdeg is None --> calculate the codphi in Radian. Otherwise in degree.
