@@ -75,7 +75,7 @@ How to Run
 4. The results, including fitted parameters and computed quantities, will be saved in an output file.
 
 Contributors
-- Mohd Rafik  
+- Moh Rafik  
 Feel free to contribute by opening issues, making pull requests, or suggesting improvements.
 
 License
