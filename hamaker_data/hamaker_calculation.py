@@ -4,7 +4,7 @@ import numpy as np
 import math
 import os
 
-def hamaker_const(datapath, filename, start_idx, end_idx, hamdeg = None ):
+def hamaker_const(datapath, filename, start_idx, end_idx, K = None, Q = None, R = None, hamdeg = None ):
 
     """
     if hamdeg is None --> then calculate the cos_phi in Radian. otherwise in degree.
@@ -41,10 +41,19 @@ def hamaker_const(datapath, filename, start_idx, end_idx, hamdeg = None ):
 
     # print(df_nd.head() ,"and size:\n ",df_nd.shape,"\n", df_nd.tail(),"\n")   # Piezo Amp near distant in meter
 
-    K= 26.90  # N/m
-    Q= 466
+     # Assign default values if they are not provided
+    K = K if K is not None else 26.90  # Default value for K
+    Q = Q if Q is not None else 466     # Default value for Q
+    R = R if R is not None else 10      # Default value for R in nm
+    R = R * 1e-9  # Convert nm to meters
+
+
+    # K= 26.90  # N/m
+    # Q= 466
     # R = 10  # nm 
-    R = 10*1e-9  # m now after convert from nm 
+
+    # R = 10*1e-9  # m now after convert from nm 
+    
     A0 = df_nd['amplitude'].iloc[-1]
     K_constant = -(3*K*A0)/(Q*R)
 
