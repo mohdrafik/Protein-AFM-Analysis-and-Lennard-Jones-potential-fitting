@@ -15,29 +15,13 @@ def hamaker_const(datapath, filename, start_idx, end_idx, K = None, Q = None, R 
     R = 10  #nm
     Piezo Amp near distant in meter
     if you are not getting nothing in some column it means it is infinite or NAN
-
     """
-    # df_nd = pd.read_excel('408 with neardistance.xlsx')
-    # df_nd = pd.read_excel("408 with piezo.xlsx")
-    file2read = os.path.join(datapath,filename)
     
-    # df_nd = pd.read_excel(file2read)
-    df_nd = pd.read_csv(file2read,delimiter=' ')
-    # df_nd = df_nd[start_idx:end_idx]
+    file2read = os.path.join(datapath,filename)
 
-    # for col in df_nd.columns:
-    #     print(col)
-    #     if col =="piezo":
-    #         distancekey = "piezo"
-    #     elif col == "piezo ":
-    #         distancekey = "piezo "
-    #     elif col == "neardistance ":
-    #         distancekey = "neardistance "
-    #     elif  col == "neardistance":
-    #         distancekey = "neardistance"
-    #     else:
-    #         print("----------- May be new key is there just check :----->")
-            
+    df_nd = pd.read_csv(file2read,delimiter=' ')
+
+    # df_nd = df_nd[start_idx:end_idx]          
 
     # print(df_nd.head() ,"and size:\n ",df_nd.shape,"\n", df_nd.tail(),"\n")   # Piezo Amp near distant in meter
 
@@ -47,12 +31,10 @@ def hamaker_const(datapath, filename, start_idx, end_idx, K = None, Q = None, R 
     R = R if R is not None else 10      # Default value for R in nm
     R = R * 1e-9  # Convert nm to meters
 
-
     # K= 26.90  # N/m
     # Q= 466
     # R = 10  # nm 
-
-    # R = 10*1e-9  # m now after convert from nm 
+    # R = R*1e-9  # m now after convert from nm 
     
     A0 = df_nd['amplitude'].iloc[-1]
     K_constant = -(3*K*A0)/(Q*R)
@@ -99,7 +81,8 @@ def hamaker_const(datapath, filename, start_idx, end_idx, K = None, Q = None, R 
     ham_cons_avg = np.mean(ham_cons)
     df_nd["ham_cons_avg"] = ham_cons_avg
 
-    print(f"ham constant :{ham_cons} and \n{ham_cons.shape} and \n \n ----> hawmaker average value:\n {ham_cons_avg}")
+    # print(f"ham constant :{ham_cons} and \n{ham_cons.shape} and \n \n ----> hawmaker average value:\n {ham_cons_avg}")
+    print(f"\n hamaker average value for the filename:{filename} is :---> {ham_cons_avg}")
     ham_consfilename = "hamaker_data"+filename[0:-4]+".xlsx"
     ham_consfilenamefinal = os.path.join(datapath,ham_consfilename)
     df_nd.to_excel(ham_consfilenamefinal)
@@ -120,28 +103,82 @@ def hamaker_const(datapath, filename, start_idx, end_idx, K = None, Q = None, R 
     # plt.grid(True)
     # # plt.plot(df_nd['neardistance'],df_nd['phase'])
 
-if __name__=="__main__":
+import os
+import pandas as pd
+
+if __name__ == "__main__":
     
     filename_list = []
     hamaker_constavglist = []
 
+    def get_user_input():
+        """Get user input for K, Q, R, and index_minima custom parameters."""
+        while True:
+            try:
+                # Prompt user for input and provide default values
+                custom_K = float(input("Enter custom K value (N/m) [default 30.0]: ") or "30.0")
+                custom_Q = float(input("Enter custom Q value [default 500]: ") or "500")
+                custom_R = float(input("Enter custom R value (nm) [default 10]: ") or "10")
+                start_index = int(input("Enter start_idx (index_minima) [default 0]: ") or "0")
+                end_index = int(input("Enter end_idx (index_minima+25) [default i.e. end value of dataframe, -1]: ") or "-1")
+
+                return custom_K, custom_Q, custom_R, start_index, end_index
+            
+            except ValueError:
+                
+                print("Invalid input. Please enter numeric values.")   
+
+    custom_K, custom_Q, custom_R, start_index, end_index = get_user_input()
     datapath = "E:\\python_programs\\xlsfileprocess\\hamaker_data\\hamdata\\"
-    # datapath = "E:\python_programs\xlsfileprocess\hamaker_data\hamdata"
+    
     for filename in os.listdir(datapath):
-        print("<------------------------------->",filename)
-        # if filename[-5:] ==".xlsx" and filename[0:7] !='hamaker':
-        if filename[-4:] ==".dat" and filename[0:7] !='hamaker':
-            print(f"----------->!!!!!!!! current processing file name is {filename}") 
-            result = hamaker_const(datapath,filename, hamdeg= None)
+        print("<------------------------------->", filename)
+        
+        # Check if the file is a .dat file and does not start with 'hamaker'
+        if filename[-4:] == ".dat" and filename[0:7] != 'hamaker':
+            print(f"----------->!!!!!!!! current processing file name is {filename}")
+
+            # Get user input for custom parameters
+
+            # Call hamaker_const with user inputs and other parameters
+            result = hamaker_const(datapath, filename, start_idx= start_index, end_idx= end_index, K=custom_K, Q=custom_Q, R=custom_R, hamdeg=None)
 
             filename_list.append(result["filename"])
             hamaker_constavglist.append(result["hamaker_const"])
 
-    hamaker_constavgData = {"filename":filename_list,"hammaker_constant":hamaker_constavglist}
-
+    # Create a DataFrame from the results
+    hamaker_constavgData = {"filename": filename_list, "hammaker_constant": hamaker_constavglist}
     hamaker_constavgData_df = pd.DataFrame(hamaker_constavgData)
 
-    hamaker_constavgData_df.to_excel(os.path.join(datapath,'hamaker_avgValeachfile.xlsx'))        
+    # Save the DataFrame to an Excel file
+    hamaker_constavgData_df.to_excel(os.path.join(datapath, 'hamaker_avgValeachfile.xlsx'))
+
+
+# if __name__=="__main__":
+    
+#     filename_list = []
+#     hamaker_constavglist = []
+
+#     datapath = "E:\\python_programs\\xlsfileprocess\\hamaker_data\\hamdata\\"
+#     # datapath = "E:\python_programs\xlsfileprocess\hamaker_data\hamdata"
+#     for filename in os.listdir(datapath):
+#         print("<------------------------------->",filename)
+#         # if filename[-5:] ==".xlsx" and filename[0:7] !='hamaker':
+#         if filename[-4:] ==".dat" and filename[0:7] !='hamaker':
+#             print(f"----------->!!!!!!!! current processing file name is {filename}")
+
+#             # result = hamaker_const(datapath,filename, hamdeg= None)
+#             # custom_K, custom_Q, custom_R, index_minima = get_user_input()
+#             result = hamaker_const(datapath,filename, start_idx = 0, end_idx = -1, K=custom_K, Q=custom_Q, R=custom_R, hamdeg= None)
+
+#             filename_list.append(result["filename"])
+#             hamaker_constavglist.append(result["hamaker_const"])
+
+#     hamaker_constavgData = {"filename":filename_list,"hammaker_constant":hamaker_constavglist}
+
+#     hamaker_constavgData_df = pd.DataFrame(hamaker_constavgData)
+
+#     hamaker_constavgData_df.to_excel(os.path.join(datapath,'hamaker_avgValeachfile.xlsx'))        
 
 
     """
