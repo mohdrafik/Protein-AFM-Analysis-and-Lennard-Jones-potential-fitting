@@ -50,23 +50,23 @@ pip install -r requirements.txt
 
 2. Prepare your AFM data files in `.xlsx` format and place them in the appropriate directory.
 
-3. Modify the `main.py` script to specify your data paths and analysis parameters.
+3. Modify the `mainprocess.py` script to specify your data paths and analysis parameters.
 
 4. Run the analysis script
    ```bash
-   python main.py
+   python mainprocess.py
    ```
 
 ## Files in the Repository
-- main.py The main script that initiates the analysis workflow, including calling the necessary functions and setting up parameters.
+- mainprocess.py The main script that initiates the analysis workflow, including calling the necessary functions and setting up parameters.
 - ham.py Contains the function `hamaker_const` which calculates the Hamaker constant and other related quantities.
 - analysis_functions.py Houses the core analysis functions for data correction, potential derivation, force fitting, and calculation of Young’s modulus and energy dissipation.
 - requirements.txt Lists the required Python packages.
 
 ## How to Run
 1. Place your `.xlsx` AFM data files in the data directory.
-2. Adjust parameters such as `K`, `Q`, `R`, and `hamdeg` in `main.py` based on your experimental setup.
-3. Run `main.py` to process your data, which will
+2. Adjust parameters such as `K`, `Q`, `R`, and `hamdeg` in `mainprocess.py` based on your experimental setup.
+3. Run `mainprocess.py` to process your data, which will
    - Extract the region of interest.
    - Locate key points like minima and inflection points.
    - Correct and normalize the AFM data.
